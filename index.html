@@ -7,7 +7,7 @@
     body {
       margin: 0;
       padding: 0;
-      background: url('flower_field.jpg') no-repeat center center fixed;
+      background: url('https://wallpapercave.com/wp/wp7450895.jpg') no-repeat center center fixed;
       background-size: cover;
       height: 100vh;
       overflow: hidden;
@@ -35,39 +35,20 @@
       border-radius: 10px;
       cursor: pointer;
       transition: 0.3s;
-      position: relative;
     }
     #yes {
       background-color: pink;
-      z-index: 2;
     }
     #no {
       background-color: lightgray;
       position: absolute;
-      top: 60%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
-    }
-    #yayText {
-      display: none;
-      color: #ff69b4;
-      font-size: 2.5em;
-      text-shadow: 2px 2px 5px #000;
-      margin-top: 20px;
-      animation: pop 1s ease;
-    }
-    @keyframes pop {
-      0% { transform: scale(0); }
-      50% { transform: scale(1.2); }
-      100% { transform: scale(1); }
     }
     canvas {
       position: absolute;
       top: 0;
       left: 0;
       pointer-events: none;
-      z-index: 0;
+      z-index: -1;
     }
   </style>
 </head>
@@ -79,8 +60,6 @@
   <button id="yes">Yes</button>
   <button id="no">No</button>
 </div>
-
-<div id="yayText">Yayyyyyyy! 💖</div>
 
 <!-- Fireworks Canvas -->
 <canvas id="fireworks"></canvas>
@@ -94,29 +73,17 @@
   const fireworksCanvas = document.getElementById('fireworks');
   const ctx = fireworksCanvas.getContext('2d');
   const bgMusic = document.getElementById('bg-music');
-  const yayText = document.getElementById('yayText');
 
-  // Make No button dodge correctly
+  // Make No button dodge
   noBtn.addEventListener('mouseover', () => {
-    const buttonWidth = noBtn.offsetWidth;
-    const buttonHeight = noBtn.offsetHeight;
-    const padding = 20; // safe distance from edges
-
-    const maxX = window.innerWidth - buttonWidth - padding;
-    const maxY = window.innerHeight - buttonHeight - padding;
-
-    const randomX = Math.random() * maxX;
-    const randomY = Math.random() * maxY;
-
-    noBtn.style.left = `${randomX}px`;
-    noBtn.style.top = `${randomY}px`;
+    noBtn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+    noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
   });
 
   // When Yes clicked
   yesBtn.addEventListener('click', () => {
     startFireworks();
     bgMusic.play();
-    yayText.style.display = 'block';
   });
 
   function startFireworks() {
@@ -126,16 +93,16 @@
 
     function createFirework() {
       let x = Math.random() * fireworksCanvas.width;
-      let y = Math.random() * fireworksCanvas.height / 2;
+      let y = Math.random() * fireworksCanvas.height/2;
       let colors = ['#ff6666', '#ffcc66', '#66ff66', '#66ccff', '#ff66ff'];
       for (let i = 0; i < 100; i++) {
         particles.push({
           x: x,
           y: y,
           radius: Math.random() * 2 + 1,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          speedX: (Math.random() - 0.5) * 5,
-          speedY: (Math.random() - 0.5) * 5,
+          color: colors[Math.floor(Math.random()*colors.length)],
+          speedX: (Math.random()-0.5)*5,
+          speedY: (Math.random()-0.5)*5,
           alpha: 1
         });
       }
@@ -152,7 +119,7 @@
         }
         ctx.globalAlpha = p.alpha;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
         ctx.fillStyle = p.color;
         ctx.fill();
       });
@@ -175,7 +142,7 @@
   blossomCanvas.style.position = 'fixed';
   blossomCanvas.style.top = 0;
   blossomCanvas.style.left = 0;
-  blossomCanvas.style.zIndex = -1;
+  blossomCanvas.style.zIndex = -2;
   blossomCanvas.style.pointerEvents = 'none';
 
   function resizeCanvas() {
