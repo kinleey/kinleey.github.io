@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Will you be my girlfriend?</title>
   <style>
     body {
@@ -24,6 +24,7 @@
       text-shadow: 2px 2px 5px #000;
       text-align: center;
       margin-bottom: 30px;
+      z-index: 1;
     }
     #buttons {
       margin-top: 20px;
@@ -31,10 +32,11 @@
       gap: 20px;
       flex-wrap: wrap;
       justify-content: center;
+      position: relative;
+      z-index: 1;
     }
     button {
       padding: 15px 30px;
-      margin: 10px;
       font-size: 1.2em;
       border: none;
       border-radius: 10px;
@@ -43,17 +45,20 @@
     }
     #yes {
       background-color: pink;
+      position: relative;
     }
     #no {
       background-color: lightgray;
       position: absolute;
+      top: 60px;
+      left: 150px;
     }
     canvas {
       position: absolute;
       top: 0;
       left: 0;
       pointer-events: none;
-      z-index: -1;
+      z-index: 0;
     }
 
     @media (max-width: 600px) {
@@ -61,15 +66,15 @@
         font-size: 2em;
       }
       button {
-        width: 80%;
-        margin: 10px 0;
+        width: 70%;
+        padding: 12px 20px;
+        font-size: 1em;
       }
-    }
-
-    /* Bounce animation for YAYYY */
-    @keyframes bounce {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.2); }
+      #no {
+        top: 150px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
     }
   </style>
 </head>
@@ -95,18 +100,15 @@
   const bgMusic = document.getElementById('bg-music');
 
   function moveNoButton() {
-    noBtn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+    noBtn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
     noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
   }
 
-  // Move on hover (desktop)
   noBtn.addEventListener('mouseover', moveNoButton);
+  noBtn.addEventListener('touchstart', moveNoButton);
 
-  // Move on touch (mobile)
-  noBtn.addEventListener('touchstart', function(e) {
-    e.preventDefault();
-    moveNoButton();
-  });
+  // Move No button immediately when page loads
+  window.onload = moveNoButton;
 
   yesBtn.addEventListener('click', () => {
     showConfirmationDialog();
@@ -167,17 +169,15 @@
     yayText.style.top = '50%';
     yayText.style.left = '50%';
     yayText.style.transform = 'translate(-50%, -50%)';
-    yayText.style.fontSize = '10em';
+    yayText.style.fontSize = '8em';
     yayText.style.color = 'pink';
     yayText.style.textShadow = '2px 2px 5px #000';
     yayText.style.zIndex = '9999';
-    yayText.style.animation = 'bounce 1s infinite';
-
     document.body.appendChild(yayText);
 
     setTimeout(() => {
       yayText.remove();
-    }, 5000);
+    }, 5000); // remove after 5 seconds
   }
 
   function startFireworks() {
@@ -228,6 +228,7 @@
 </script>
 
 <script>
+  // Cherry blossom animation
   const blossomCanvas = document.createElement('canvas');
   blossomCanvas.id = 'blossom';
   document.body.appendChild(blossomCanvas);
