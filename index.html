@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -82,9 +82,74 @@
 
   // When Yes clicked
   yesBtn.addEventListener('click', () => {
-    startFireworks();
-    bgMusic.play();
+    showConfirmationDialog();
   });
+
+  function showConfirmationDialog() {
+    const confirmationBox = document.createElement('div');
+    confirmationBox.style.position = 'fixed';
+    confirmationBox.style.top = '50%';
+    confirmationBox.style.left = '50%';
+    confirmationBox.style.transform = 'translate(-50%, -50%)';
+    confirmationBox.style.background = 'white';
+    confirmationBox.style.padding = '30px';
+    confirmationBox.style.borderRadius = '15px';
+    confirmationBox.style.boxShadow = '0 0 20px rgba(0,0,0,0.5)';
+    confirmationBox.style.zIndex = '9999';
+    confirmationBox.style.textAlign = 'center';
+
+    const question = document.createElement('p');
+    question.innerText = 'Are you sure?';
+    question.style.fontSize = '1.5em';
+    question.style.marginBottom = '20px';
+    confirmationBox.appendChild(question);
+
+    const yesBtn1 = document.createElement('button');
+    yesBtn1.innerText = 'Yes';
+    yesBtn1.style.margin = '10px';
+    yesBtn1.style.padding = '10px 20px';
+    yesBtn1.style.fontSize = '1.2em';
+    yesBtn1.style.cursor = 'pointer';
+    confirmationBox.appendChild(yesBtn1);
+
+    const yesBtn2 = document.createElement('button');
+    yesBtn2.innerText = '100% Yes';
+    yesBtn2.style.margin = '10px';
+    yesBtn2.style.padding = '10px 20px';
+    yesBtn2.style.fontSize = '1.2em';
+    yesBtn2.style.cursor = 'pointer';
+    confirmationBox.appendChild(yesBtn2);
+
+    document.body.appendChild(confirmationBox);
+
+    function finishConfirmation() {
+      document.body.removeChild(confirmationBox);
+      startFireworks();
+      bgMusic.play();
+      showYayMessage();
+    }
+
+    yesBtn1.addEventListener('click', finishConfirmation);
+    yesBtn2.addEventListener('click', finishConfirmation);
+  }
+
+  function showYayMessage() {
+    const yayText = document.createElement('div');
+    yayText.innerText = 'Yayyyyy!!!';
+    yayText.style.position = 'fixed';
+    yayText.style.top = '50%';
+    yayText.style.left = '50%';
+    yayText.style.transform = 'translate(-50%, -50%)';
+    yayText.style.fontSize = '4em';
+    yayText.style.color = 'pink';
+    yayText.style.textShadow = '2px 2px 5px #000';
+    yayText.style.zIndex = '9999';
+    document.body.appendChild(yayText);
+
+    setTimeout(() => {
+      yayText.remove();
+    }, 3000); // remove after 3 seconds
+  }
 
   function startFireworks() {
     fireworksCanvas.width = window.innerWidth;
