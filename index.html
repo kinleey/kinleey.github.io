@@ -94,22 +94,11 @@
   const fireworksCanvas = document.getElementById('fireworks');
   const ctx = fireworksCanvas.getContext('2d');
   const bgMusic = document.getElementById('bg-music');
-  const yayText = document.getElementById('yayText');
 
-  // Make No button dodge correctly
+  // Make No button dodge
   noBtn.addEventListener('mouseover', () => {
-    const buttonWidth = noBtn.offsetWidth;
-    const buttonHeight = noBtn.offsetHeight;
-    const padding = 20; // safe distance from edges
-
-    const maxX = window.innerWidth - buttonWidth - padding;
-    const maxY = window.innerHeight - buttonHeight - padding;
-
-    const randomX = Math.random() * maxX;
-    const randomY = Math.random() * maxY;
-
-    noBtn.style.left = `${randomX}px`;
-    noBtn.style.top = `${randomY}px`;
+    noBtn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+    noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
   });
 
   // When Yes clicked
