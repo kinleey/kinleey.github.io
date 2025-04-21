@@ -11,24 +11,21 @@
       background-size: cover;
       height: 100vh;
       overflow: hidden;
-      font-family: 'Arial', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      font-family: 'Arial', sans-serif;
     }
     h1 {
       color: white;
       font-size: 3em;
       text-shadow: 2px 2px 5px #000;
-      margin-bottom: 20px;
-      z-index: 2;
-      position: relative;
+      text-align: center;
+      margin-bottom: 30px;
     }
     #buttons {
       margin-top: 20px;
-      z-index: 2;
-      position: relative;
     }
     button {
       padding: 15px 30px;
@@ -38,38 +35,39 @@
       border-radius: 10px;
       cursor: pointer;
       transition: 0.3s;
+      position: relative;
     }
     #yes {
       background-color: pink;
+      z-index: 2;
     }
     #no {
       background-color: lightgray;
       position: absolute;
-    }
-    #fireworks {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0; /* background fireworks */
-      pointer-events: none;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
     }
     #yayText {
       display: none;
-      font-size: 4em;
-      color: white;
+      color: #ff69b4;
+      font-size: 2.5em;
       text-shadow: 2px 2px 5px #000;
-      position: fixed;
-      top: 40%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 3; /* ABOVE everything */
-      animation: fadeIn 2s forwards;
+      margin-top: 20px;
+      animation: pop 1s ease;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    @keyframes pop {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 0;
     }
   </style>
 </head>
@@ -82,10 +80,12 @@
   <button id="no">No</button>
 </div>
 
+<div id="yayText">Yayyyyyyy! 💖</div>
+
+<!-- Fireworks Canvas -->
 <canvas id="fireworks"></canvas>
 
-<div id="yayText">Yayyyyyyy!</div>
-
+<!-- Background Music (hidden audio) -->
 <audio id="bg-music" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_0c714eb8cc.mp3?filename=spring-breeze-20741.mp3"></audio>
 
 <script>
@@ -96,11 +96,23 @@
   const bgMusic = document.getElementById('bg-music');
   const yayText = document.getElementById('yayText');
 
+  // Make No button dodge correctly
   noBtn.addEventListener('mouseover', () => {
-    noBtn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
-    noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+    const buttonWidth = noBtn.offsetWidth;
+    const buttonHeight = noBtn.offsetHeight;
+    const padding = 20; // safe distance from edges
+
+    const maxX = window.innerWidth - buttonWidth - padding;
+    const maxY = window.innerHeight - buttonHeight - padding;
+
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
+
+    noBtn.style.left = `${randomX}px`;
+    noBtn.style.top = `${randomY}px`;
   });
 
+  // When Yes clicked
   yesBtn.addEventListener('click', () => {
     startFireworks();
     bgMusic.play();
@@ -152,6 +164,59 @@
     setInterval(createFirework, 700);
     animateFireworks();
   }
+</script>
+
+<script>
+  // --- Cherry Blossom Petals Animation ---
+  const blossomCanvas = document.createElement('canvas');
+  blossomCanvas.id = 'blossom';
+  document.body.appendChild(blossomCanvas);
+  const bctx = blossomCanvas.getContext('2d');
+  blossomCanvas.style.position = 'fixed';
+  blossomCanvas.style.top = 0;
+  blossomCanvas.style.left = 0;
+  blossomCanvas.style.zIndex = -1;
+  blossomCanvas.style.pointerEvents = 'none';
+
+  function resizeCanvas() {
+    blossomCanvas.width = window.innerWidth;
+    blossomCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  let petals = [];
+  for (let i = 0; i < 50; i++) {
+    petals.push({
+      x: Math.random() * blossomCanvas.width,
+      y: Math.random() * blossomCanvas.height,
+      r: Math.random() * 5 + 2,
+      speedX: Math.random() * 1 - 0.5,
+      speedY: Math.random() * 2 + 1,
+      angle: Math.random() * Math.PI * 2,
+      rotation: Math.random() * 0.02 - 0.01
+    });
+  }
+
+  function drawPetals() {
+    bctx.clearRect(0, 0, blossomCanvas.width, blossomCanvas.height);
+    bctx.fillStyle = 'pink';
+    petals.forEach(p => {
+      bctx.beginPath();
+      bctx.ellipse(p.x, p.y, p.r * 1.5, p.r, p.angle, 0, Math.PI * 2);
+      bctx.fill();
+      p.x += p.speedX;
+      p.y += p.speedY;
+      p.angle += p.rotation;
+
+      if (p.y > blossomCanvas.height) {
+        p.y = -10;
+        p.x = Math.random() * blossomCanvas.width;
+      }
+    });
+    requestAnimationFrame(drawPetals);
+  }
+  drawPetals();
 </script>
 
 </body>
