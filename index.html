@@ -7,7 +7,7 @@
     body {
       margin: 0;
       padding: 0;
-      background: url('flower_field.jpg') no-repeat center center fixed;
+      background: url('flower_field.jpg') no-repeat center center fixed; /* Your uploaded background image */
       background-size: cover;
       height: 100vh;
       overflow: hidden;
@@ -50,6 +50,20 @@
       pointer-events: none;
       z-index: -1;
     }
+    #yayText {
+      display: none;
+      font-size: 4em;
+      color: white;
+      text-shadow: 2px 2px 5px #000;
+      position: absolute;
+      top: 40%;
+      text-align: center;
+      animation: fadeIn 2s forwards;
+    }
+    @keyframes fadeIn {
+      0% {opacity: 0;}
+      100% {opacity: 1;}
+    }
   </style>
 </head>
 <body>
@@ -64,6 +78,9 @@
 <!-- Fireworks Canvas -->
 <canvas id="fireworks"></canvas>
 
+<!-- Yay Text -->
+<div id="yayText">Yayyyyyyy!</div>
+
 <!-- Background Music (hidden audio) -->
 <audio id="bg-music" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_0c714eb8cc.mp3?filename=spring-breeze-20741.mp3"></audio>
 
@@ -73,6 +90,7 @@
   const fireworksCanvas = document.getElementById('fireworks');
   const ctx = fireworksCanvas.getContext('2d');
   const bgMusic = document.getElementById('bg-music');
+  const yayText = document.getElementById('yayText');
 
   // Make No button dodge
   noBtn.addEventListener('mouseover', () => {
@@ -84,6 +102,7 @@
   yesBtn.addEventListener('click', () => {
     startFireworks();
     bgMusic.play();
+    yayText.style.display = 'block';
   });
 
   function startFireworks() {
