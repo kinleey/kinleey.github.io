@@ -1,7 +1,8 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Will you be my girlfriend?</title>
   <style>
     body {
@@ -26,6 +27,10 @@
     }
     #buttons {
       margin-top: 20px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
     button {
       padding: 15px 30px;
@@ -50,8 +55,25 @@
       pointer-events: none;
       z-index: -1;
     }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2em;
+      }
+      button {
+        width: 80%;
+        margin: 10px 0;
+      }
+    }
+
+    /* Bounce animation for YAYYY */
+    @keyframes bounce {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.2); }
+    }
   </style>
 </head>
+
 <body>
 
 <h1>Will you be my girlfriend?</h1>
@@ -61,10 +83,8 @@
   <button id="no">No</button>
 </div>
 
-<!-- Fireworks Canvas -->
 <canvas id="fireworks"></canvas>
 
-<!-- Background Music (hidden audio) -->
 <audio id="bg-music" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_0c714eb8cc.mp3?filename=spring-breeze-20741.mp3"></audio>
 
 <script>
@@ -74,13 +94,20 @@
   const ctx = fireworksCanvas.getContext('2d');
   const bgMusic = document.getElementById('bg-music');
 
-  // Make No button dodge
-  noBtn.addEventListener('mouseover', () => {
+  function moveNoButton() {
     noBtn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
     noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+  }
+
+  // Move on hover (desktop)
+  noBtn.addEventListener('mouseover', moveNoButton);
+
+  // Move on touch (mobile)
+  noBtn.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    moveNoButton();
   });
 
-  // When Yes clicked
   yesBtn.addEventListener('click', () => {
     showConfirmationDialog();
   });
@@ -140,15 +167,17 @@
     yayText.style.top = '50%';
     yayText.style.left = '50%';
     yayText.style.transform = 'translate(-50%, -50%)';
-    yayText.style.fontSize = '8em';
+    yayText.style.fontSize = '10em';
     yayText.style.color = 'pink';
     yayText.style.textShadow = '2px 2px 5px #000';
     yayText.style.zIndex = '9999';
+    yayText.style.animation = 'bounce 1s infinite';
+
     document.body.appendChild(yayText);
 
     setTimeout(() => {
       yayText.remove();
-    }, 5000); // remove after 5 seconds
+    }, 5000);
   }
 
   function startFireworks() {
@@ -199,7 +228,6 @@
 </script>
 
 <script>
-  // --- Cherry Blossom Petals Animation ---
   const blossomCanvas = document.createElement('canvas');
   blossomCanvas.id = 'blossom';
   document.body.appendChild(blossomCanvas);
