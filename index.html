@@ -1,4 +1,130 @@
-<html>
-  <head><title>My Website</title></head>
-  <body><h1>Hello World!</h1></body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Will you be my girlfriend?</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('cherry-blossom.jpg') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Arial', sans-serif;
+    }
+    h1 {
+      color: white;
+      font-size: 3em;
+      text-shadow: 2px 2px 5px #000;
+    }
+    #buttons {
+      margin-top: 20px;
+    }
+    button {
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #yes {
+      background-color: pink;
+    }
+    #no {
+      background-color: lightgray;
+      position: absolute;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Will you be my girlfriend?</h1>
+
+<div id="buttons">
+  <button id="yes">Yes</button>
+  <button id="no">No</button>
+</div>
+
+<canvas id="fireworks"></canvas>
+
+<script>
+  const noBtn = document.getElementById('no');
+  const yesBtn = document.getElementById('yes');
+  const fireworksCanvas = document.getElementById('fireworks');
+  const ctx = fireworksCanvas.getContext('2d');
+
+  // Make "No" button dodge
+  noBtn.addEventListener('mouseover', () => {
+    noBtn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+    noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+  });
+
+  // When "Yes" clicked, show fireworks
+  yesBtn.addEventListener('click', () => {
+    startFireworks();
+  });
+
+  // Fireworks
+  function startFireworks() {
+    fireworksCanvas.width = window.innerWidth;
+    fireworksCanvas.height = window.innerHeight;
+    let particles = [];
+
+    function createFirework() {
+      let x = Math.random() * fireworksCanvas.width;
+      let y = Math.random() * fireworksCanvas.height/2;
+      let colors = ['#ff6666', '#ffcc66', '#66ff66', '#66ccff', '#ff66ff'];
+      for (let i = 0; i < 100; i++) {
+        particles.push({
+          x: x,
+          y: y,
+          radius: Math.random() * 2 + 1,
+          color: colors[Math.floor(Math.random()*colors.length)],
+          speedX: (Math.random()-0.5)*5,
+          speedY: (Math.random()-0.5)*5,
+          alpha: 1
+        });
+      }
+    }
+
+    function animateFireworks() {
+      ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+      particles.forEach((p, i) => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.alpha -= 0.01;
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+        }
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+
+      requestAnimationFrame(animateFireworks);
+    }
+
+    createFirework();
+    setInterval(createFirework, 700);
+    animateFireworks();
+  }
+</script>
+
+</body>
 </html>
+
